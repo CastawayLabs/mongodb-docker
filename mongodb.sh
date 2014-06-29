@@ -1,3 +1,4 @@
 #!/bin/bash
 
-mongod --config /etc/mongod.conf --smallfiles --replSet ${REPL_SET}
+echo "Replica Set => $REPL_SET"
+mongod --config /etc/mongod.conf --smallfiles --replSet "$REPL_SET"
