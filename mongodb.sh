@@ -1,3 +1,3 @@
 #!/bin/bash
 
-mongod --config /etc/mongod.conf
+mongod --config /etc/mongod.conf --smallfiles --replSet ${REPL_SET}
