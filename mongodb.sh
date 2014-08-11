@@ -1,12 +1,5 @@
 #!/bin/bash
 
-# Add replica set to mongodb config
-if [ ! -z "$REPL_SET" ]
-then
-  echo "Replica Set => $REPL_SET"
-  echo "replSet=$REPL_SET" >> /etc/mongod.conf
-fi
-
 # Rsyslog setup
 if [ ! -z "$RSYSLOG" ]
 then
@@ -30,7 +23,7 @@ then
   mongod --config /etc/mongod.conf --smallfiles --replSet "$REPL_SET" --noauth &
   mongod_pid=$!
   
-  echo "Sleeping 5 for mongodb to become available... "
+  echo "Sleeping 5 secs for mongodb to become available... "
   sleep 5
   
   mongo "$2" /tmp/setup.js
