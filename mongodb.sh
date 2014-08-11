@@ -11,14 +11,11 @@ fi
 # Setup mongodb user
 # $1 'setup' to do setup
 # $2 the database to set up .. e.g. 'admin'
-# $3 user mongodb username
-# $4 user mongodb password
-# $5 user roles.. e.g. for admin "{ role: 'userAdminAnyDatabase', db: 'admin' }, { role: 'readWriteAnyDatabase', db: 'admin' }"
+# Note, pass in a volume with /tmp/setup.js file.
 
 if [ "$1" == "setup" ]
 then
   echo "Performing Initial Setup"
-  echo "db.createUser({ user: '$3', pwd: '$4', roles: [$5] })" > /tmp/setup.js
   
   mongod --config /etc/mongod.conf --smallfiles --replSet "$REPL_SET" --noauth &
   mongod_pid=$!
