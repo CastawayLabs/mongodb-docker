@@ -20,7 +20,7 @@ fi
 # $2 user mongodb username
 # $3 user mongodb password
 
-if [ "$1" -eq "setup" ]
+if [ "$1" == "setup" ]
 then
   echo "Performing Initial Setup"
   echo "db.createUser({ user: '$2', pwd: '$3', roles: [{ role: 'userAdminAnyDatabase', db: 'admin' }, { role: 'readWriteAnyDatabase', db: 'admin' }] })" > /tmp/setup.js
