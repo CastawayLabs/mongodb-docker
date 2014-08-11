@@ -9,6 +9,8 @@ RUN apt-get update
 RUN apt-get install -y mongodb-org
 RUN /etc/init.d/mongod stop
 
+RUN apt-get install rsyslog curl
+
 # MongoDB Configuration
 ADD mongodb.conf /etc/mongod.conf
 
