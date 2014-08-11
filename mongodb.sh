@@ -8,6 +8,29 @@ then
   echo "$RSYSLOG" >> /etc/rsyslog.conf
 fi
 
+# Setup Replica Set
+if [ "$1" == "setupReplicaSet" ]
+then
+  echo "Performing Replica Setup"
+  
+  mongod --config /etc/mongod.conf --smallfiles --replSet "$REPL_SET" --noauth &
+  mongod_pid=$!
+  
+  echo "Sleeping 5 secs for mongodb to become available... "
+  sleep 5
+  
+  echo "rs.initiate();" > /tmp/initiate_mongo.js
+  
+  mongo "$2" /tmp/initiate_mongo.js
+  echo "Sleeping 5 secs for mongodb to initiate replica set..."
+  sleep 5
+  
+  kill $mongod_pid
+  sleep 2
+  
+  exit 0
+fi
+
 # Setup mongodb user
 # $1 'setup' to do setup
 # $2 the database to set up .. e.g. 'admin'
@@ -21,12 +44,6 @@ then
   mongod_pid=$!
   
   echo "Sleeping 5 secs for mongodb to become available... "
-  sleep 5
-  
-  echo "rs.initiate();" > /tmp/initiate_mongo.js
-  
-  mongo "$2" /tmp/initiate_mongo.js
-  echo "Sleeping 5 secs for mongodb to initiate replica set..."
   sleep 5
   
   mongo "$2" /tmp/setup.js
