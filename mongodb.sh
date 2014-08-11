@@ -32,6 +32,8 @@ then
   mongo "$2" /tmp/setup.js
   
   kill $mongod_pid
+  sleep 2
+  
   exit 0
 fi
 
