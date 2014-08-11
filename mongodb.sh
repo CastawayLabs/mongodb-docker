@@ -19,11 +19,14 @@ then
   echo "Sleeping 5 secs for mongodb to become available... "
   sleep 5
   
-  echo "rs.initiate();" > /tmp/initiate_mongo.js
+  echo "printjson(rs.initiate({ _id: '$REPL_SET', members: [{ _id: 0, host: '$(hostname)' }] }));" > /tmp/initiate_mongo.js
   
   mongo "$2" /tmp/initiate_mongo.js
   echo "Sleeping 5 secs for mongodb to initiate replica set..."
   sleep 5
+  
+  echo "printjson(rs.status());" > /tmp/initiate_mongo.js
+  mongo "$2" /tmp/initiate_mongo.js
   
   kill $mongod_pid
   sleep 2
