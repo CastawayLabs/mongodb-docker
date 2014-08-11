@@ -25,10 +25,11 @@ then
   echo "Performing Initial Setup"
   echo "db.createUser({ user: '$2', pwd: '$3', roles: [{ role: 'userAdminAnyDatabase', db: 'admin' }, { role: 'readWriteAnyDatabase', db: 'admin' }] })" > /tmp/setup.js
   
-  mongod --config /etc/mongod.conf --smallfiles --replSet "$REPL_SET" --noauth 2>&1 > /dev/null &
+  mongod --config /etc/mongod.conf --smallfiles --replSet "$REPL_SET" --noauth &
   mongod_pid=$!
   
-  wait $mongod_pid
+  echo "Sleeping 5 for mongodb to become available... "
+  sleep 5
   
   mongo admin /tmp/setup.js
   
