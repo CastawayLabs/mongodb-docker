@@ -17,13 +17,15 @@ fi
 
 # Setup mongodb user
 # $1 'setup' to do setup
-# $2 user mongodb username
-# $3 user mongodb password
+# $2 the database to set up .. e.g. 'admin'
+# $3 user mongodb username
+# $4 user mongodb password
+# $5 user roles.. e.g. for admin "{ role: 'userAdminAnyDatabase', db: 'admin' }, { role: 'readWriteAnyDatabase', db: 'admin' }"
 
 if [ "$1" == "setup" ]
 then
   echo "Performing Initial Setup"
-  echo "db.createUser({ user: '$2', pwd: '$3', roles: [{ role: 'userAdminAnyDatabase', db: 'admin' }, { role: 'readWriteAnyDatabase', db: 'admin' }] })" > /tmp/setup.js
+  echo "db.createUser({ user: '$3', pwd: '$4', roles: [$5] })" > /tmp/setup.js
   
   mongod --config /etc/mongod.conf --smallfiles --replSet "$REPL_SET" --noauth &
   mongod_pid=$!
@@ -31,7 +33,7 @@ then
   echo "Sleeping 5 for mongodb to become available... "
   sleep 5
   
-  mongo admin /tmp/setup.js
+  mongo "$2" /tmp/setup.js
   
   kill $mongod_pid
   exit 0
