@@ -23,6 +23,12 @@ then
   echo "Sleeping 5 secs for mongodb to become available... "
   sleep 5
   
+  echo "rs.initiate();" > /tmp/initiate_mongo.js
+  
+  mongo "$2" /tmp/initiate_mongo.js
+  echo "Sleeping 5 secs for mongodb to initiate replica set..."
+  sleep 5
+  
   mongo "$2" /tmp/setup.js
   
   kill $mongod_pid
