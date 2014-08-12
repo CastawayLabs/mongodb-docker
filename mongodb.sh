@@ -16,8 +16,15 @@ then
   mongod --config /etc/mongod.conf --smallfiles --replSet "$REPL_SET" --noauth &
   mongod_pid=$!
   
-  echo "Sleeping 5 secs for mongodb to become available... "
-  sleep 5
+  # FRom https://stackoverflow.com/questions/15443106/how-to-check-if-mongodb-is-up-and-ready-to-accept-connections-from-bash-script
+  COUNTER=0
+  grep -q 'waiting for connections on port' /var/log/mongodb.log
+  while [[ $? -ne 0 && $COUNTER -lt 60 ]] ; do
+    sleep 2
+    let COUNTER+=2
+    echo "Waiting for mongo to initialize... ($COUNTER seconds / 60)"
+    grep -q 'waiting for connections on port' /var/log/mongodb.log
+  done
   
   echo "printjson(rs.initiate({ _id: '$REPL_SET', members: [{ _id: 0, host: '$(hostname)' }] }));" > /tmp/initiate_mongo.js
   
